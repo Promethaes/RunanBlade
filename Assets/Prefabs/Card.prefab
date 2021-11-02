@@ -317,7 +317,10 @@ MonoBehaviour:
   OnThisCardDealt:
     m_PersistentCalls:
       m_Calls: []
+  cast: 0
   data: {fileID: 11400000, guid: 005a4c81e440354449e95ab1298027a5, type: 2}
+  cardManager: {fileID: 0}
+  cardSlot: {fileID: 0}
 --- !u!1 &5934770777015285602
 GameObject:
   m_ObjectHideFlags: 0

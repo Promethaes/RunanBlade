@@ -7,15 +7,10 @@ using UnityEngine.Events;
 public class Health : MonoBehaviour
 {
 
-    [SerializeField] protected float health;
-    [SerializeField] bool disableOnDeath = true;
+    [SerializeField] protected float health = 0.0f;
 
     public UnityEvent OnTakeDamage, OnDie;
-    private bool deathDone = false;
     protected float _maxHP = 0.0f;
-
-    [Header("Reference")]
-    [SerializeField] new Rigidbody rigidbody = null;
 
     private void Start()
     {
@@ -26,11 +21,10 @@ public class Health : MonoBehaviour
     {
         return health;
     }
-    public virtual void TakeDamage(float damage, Vector3 knockback)
+    //knockback should be done on the attacker's side
+    public virtual void TakeDamage(float damage)
     {
         health -= damage;
-        if (knockback.magnitude != 0.0f)
-            rigidbody.AddForce(knockback, ForceMode.Impulse);
         OnTakeDamage.Invoke();
         if (health <= 0)
             OnDie.Invoke();

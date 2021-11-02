@@ -11,6 +11,8 @@ public class CardVisuals : MonoBehaviour
     [SerializeField] GameObject Front = null;
     [SerializeField] Card card = null;
 
+    
+    [HideInInspector] public Transform cardSlot = null;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,6 +31,7 @@ public class CardVisuals : MonoBehaviour
         }
 
         card.OnThisCardDealt.AddListener(OnDeal);
+        card.OnThisCardReshuffled.AddListener(OnReshuffle);
     }
 
 }

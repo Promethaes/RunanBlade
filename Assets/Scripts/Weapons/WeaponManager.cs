@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using static UnityEngine.InputSystem.InputAction;
 
 public class WeaponManager : MonoBehaviour
 {
-    [SerializeField] List<Weapon> weapons = new List<Weapon>();
+
     [SerializeField] float downtime = 0.25f;
     public UnityEvent OnChangeWeapon;
     public UnityEvent OnBeginAttack;
     public UnityEvent OnFinishAttack;
 
-    int _weaponIndex = 0;
+    [Header("References")]
+    [SerializeField] List<Weapon> weapons = new List<Weapon>();
+
     Weapon _currentWeapon = null;
-    bool _canBackstab = false;
 
     float _internalDowntime = 0.0f;
 
@@ -24,7 +26,6 @@ public class WeaponManager : MonoBehaviour
         {
             if (_currentWeapon == w)
                 continue;
-            w.gameObject.SetActive(false);
         }
     }
 
@@ -35,9 +36,9 @@ public class WeaponManager : MonoBehaviour
             OnFinishAttack.Invoke();
     }
 
-    public void AttackWithCurrentWeapon()
+    public void AttackWithCurrentWeapon(CallbackContext ctx)
     {
-        if (_currentWeapon.GetAmmo() == 0)
+        if (_currentWeapon.GetAmmo() == 0 || !ctx.performed)
             return;
         _internalDowntime = 0.0f;
         OnBeginAttack.Invoke();
@@ -46,31 +47,23 @@ public class WeaponManager : MonoBehaviour
         //     ChangeWeapon(0);
     }
 
-    public void ChangeWeapon(int index)
+    public void ChangeWeapon(Weapon weapon)
     {
         IEnumerator Wait()
         {
             while (_currentWeapon.attacking)
                 yield return new WaitForEndOfFrame();
-            _weaponIndex = index;
-            _currentWeapon.gameObject.SetActive(false);
-            _currentWeapon = weapons[_weaponIndex];
-            _currentWeapon.gameObject.SetActive(true);
+            _currentWeapon = weapon;
             OnChangeWeapon.Invoke();
         }
         StartCoroutine(Wait());
     }
-
-    private void OnTriggerStay(Collider other)
+    public void AddWeapon(Weapon weapon)
     {
-        if (other.gameObject.CompareTag("Terrain") || other.gameObject.CompareTag("Unassigned"))
-            return;
-        _canBackstab = true;
+        weapons.Add(weapon);
     }
-    private void OnTriggerExit(Collider other)
+    public void RemoveWeapon(Weapon weapon)
     {
-        if (other.gameObject.CompareTag("Terrain") || other.gameObject.CompareTag("Unassigned"))
-            return;
-        _canBackstab = false;
+        weapons.Remove(weapon);
     }
 }

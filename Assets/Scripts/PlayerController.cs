@@ -95,7 +95,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnJump(CallbackContext ctx)
     {
-        if (!_canJump)
+        if (!_canJump || !ctx.performed)
             return;
         rigidbody.AddForce(Vector2.up * jumpScalar,ForceMode2D.Impulse);
     }
