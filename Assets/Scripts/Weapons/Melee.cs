@@ -30,6 +30,7 @@ public class Melee : Weapon
                     _comboCooldown -= Time.deltaTime;
                     if (_comboCooldown <= 0.0f)
                     {
+                        attacking = false;
                         _comboCounter = 0;
                         _comboCooldown = comboCooldown;
                     }
@@ -65,6 +66,7 @@ public class Melee : Weapon
             return;
         IEnumerator Wait()
         {
+            attacking = true;
             _comboCooldown = comboCooldown;
             _comboCounter++;
             hitbox.SetActive(true);

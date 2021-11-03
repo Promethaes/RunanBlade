@@ -11,6 +11,7 @@ public class DrawerArrow : MonoBehaviour
     [SerializeField] Transform drawerOpenThreshold = null;
     [SerializeField] GameObject background = null;
     [SerializeField] Transform bgLerpPos = null;
+    [SerializeField] WeaponManager weaponManager = null;
 
     Vector2 _originalPos = new Vector2();
     Vector2 _mousePos = new Vector2();
@@ -29,7 +30,7 @@ public class DrawerArrow : MonoBehaviour
     //maybe revise this code
     private void Update()
     {
-        _opening = _mousePos.y <= _yCoord;
+        weaponManager.canAttack = !(_opening = _mousePos.y <= _yCoord);
 
         if (_opening)
             _x += Time.deltaTime * lerpSpeed;
@@ -45,5 +46,10 @@ public class DrawerArrow : MonoBehaviour
     public void MousePosition(CallbackContext ctx)
     {
         _mousePos = ctx.ReadValue<Vector2>();
+    }
+
+    public bool IsDrawerOpen()
+    {
+        return _opening;
     }
 }

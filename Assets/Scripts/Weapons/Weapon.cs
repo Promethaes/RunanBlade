@@ -10,6 +10,8 @@ public class Weapon : MonoBehaviour
     [HideInInspector] public bool attacking = false;
 
     public UnityEvent OnAttack;
+    public UnityEvent OnSelected;
+    public UnityEvent OnDeselected;
 
     public int GetAmmo()
     {

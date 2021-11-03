@@ -15,6 +15,8 @@ public class WeaponManager : MonoBehaviour
     [Header("References")]
     [SerializeField] List<Weapon> weapons = new List<Weapon>();
 
+    [HideInInspector] public bool canAttack = true;
+
     Weapon _currentWeapon = null;
 
     float _internalDowntime = 0.0f;
@@ -38,7 +40,7 @@ public class WeaponManager : MonoBehaviour
 
     public void AttackWithCurrentWeapon(CallbackContext ctx)
     {
-        if (_currentWeapon.GetAmmo() == 0 || !ctx.performed)
+        if (_currentWeapon.GetAmmo() == 0 || !ctx.performed || !canAttack)
             return;
         _internalDowntime = 0.0f;
         OnBeginAttack.Invoke();
@@ -49,11 +51,17 @@ public class WeaponManager : MonoBehaviour
 
     public void ChangeWeapon(Weapon weapon)
     {
+        Debug.Log(weapons[0].name);
         IEnumerator Wait()
         {
             while (_currentWeapon.attacking)
                 yield return new WaitForEndOfFrame();
-            _currentWeapon = weapon;
+            _currentWeapon.OnDeselected.Invoke();
+            if (weapon == null)
+                _currentWeapon = weapons[0];
+            else
+                _currentWeapon = weapon;
+            _currentWeapon.OnSelected.Invoke();
             OnChangeWeapon.Invoke();
         }
         StartCoroutine(Wait());

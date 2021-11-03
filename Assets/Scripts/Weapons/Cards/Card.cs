@@ -2,31 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
-public class Card : Weapon
+public class Card : Weapon, IPointerClickHandler
 {
-    public UnityEvent OnThisCardDealt;
-    public UnityEvent OnThisCardReshuffled;
+    public UnityEvent OnDealt;
+    public UnityEvent OnReshuffled;
+    public UnityEvent OnDiscarded;
+
     [Header("References")]
     [SerializeField] CardData data = null;
     [SerializeField] List<Effect> effects = new List<Effect>();
+    [HideInInspector] public CardManager cardManager = null;
     [HideInInspector] public Arcana arcana = null;
 
     bool _castable = true;
     bool _markedForDiscard = false;
 
-    private void Start()
-    {
-    }
-
     public override void Attack()
     {
+        base.Attack();
         if (!_castable || !arcana.UseArcana(data.cost))
             return;
         Cast();
         //do the thing
         _castable = false;
         _markedForDiscard = true;
+        cardManager.DeselectCard();
     }
     public void Cast()
     {
@@ -38,6 +40,7 @@ public class Card : Weapon
                 while (!e.finishedCasting)
                     yield return null;
             }
+            yield return null;
         }
         StartCoroutine(AttemptCast());
     }
@@ -45,5 +48,10 @@ public class Card : Weapon
     public bool IsMarkedForDiscard()
     {
         return _markedForDiscard;
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        cardManager.SelectCard(this);
     }
 }

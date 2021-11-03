@@ -29,6 +29,7 @@ public class CardManager : MonoBehaviour
     [SerializeField] Arcana arcana = null;
     [SerializeField] WeaponManager weaponManager = null;
     List<Card> _deck = new List<Card>();
+    List<Card> _hand = new List<Card>();
     List<Card> _discard = new List<Card>();
 
     //false for free, true for occupied
@@ -42,6 +43,7 @@ public class CardManager : MonoBehaviour
             {
                 _deck.Add(GameObject.Instantiate(dh.card, transform.position, Quaternion.identity, transform));
                 _deck[_deck.Count - 1].arcana = arcana;
+                _deck[_deck.Count - 1].cardManager = this;
             }
         foreach (var c in cardSlots)
             _internalCardSlots.Add(c, false);
@@ -58,7 +60,20 @@ public class CardManager : MonoBehaviour
         StartCoroutine(DealInitialHand());
     }
 
-    public void Deal()
+    private void Update()
+    {
+        for (int i = 0; i < _hand.Count; i++)
+        {
+            if (_hand[i].IsMarkedForDiscard())
+            {
+                Discard(_hand[i]);
+                i--;
+            }
+        }
+
+    }
+
+    void Deal()
     {
         for (int i = cardSlots.Count - 1; i >= 0; i--)
         {
@@ -67,10 +82,11 @@ public class CardManager : MonoBehaviour
 
             var card = _deck[_deck.Count - 1];
             _deck.Remove(card);
+            _hand.Add(card);
             weaponManager.AddWeapon(card);
             _internalCardSlots[cardSlots[i]] = true;
             OnDeal.Invoke();
-            card.OnThisCardDealt.Invoke();
+            card.OnDealt.Invoke();
 
             IEnumerator Lerp()
             {
@@ -90,13 +106,15 @@ public class CardManager : MonoBehaviour
         }
     }
 
-    public void Discard(Card card)
+    void Discard(Card card)
     {
+        _hand.Remove(card);
         _discard.Add(card);
         weaponManager.RemoveWeapon(card);
         IEnumerator Lerp()
         {
             var cardSlot = card.GetComponent<CardVisuals>().cardSlot;
+            card.transform.SetParent(discardPile);
             float x = 0.0f;
             while (x < 1.0f)
             {
@@ -105,9 +123,17 @@ public class CardManager : MonoBehaviour
                 card.transform.position = Vector3.Lerp(cardSlot.transform.position, discardPile.transform.position, lerpCurve.Evaluate(x));
             }
             card.GetComponent<CardVisuals>().cardSlot = null;
-            card.transform.SetParent(discardPile);
         }
         StartCoroutine(Lerp());
+    }
+
+    public void SelectCard(Card c)
+    {
+        weaponManager.ChangeWeapon(c);
+    }
+    public void DeselectCard()
+    {
+        weaponManager.ChangeWeapon(null);
     }
 
 }

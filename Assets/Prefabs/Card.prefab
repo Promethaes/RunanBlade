@@ -221,6 +221,7 @@ GameObject:
   - component: {fileID: 7065110121710417120}
   - component: {fileID: 3593953900394634026}
   - component: {fileID: 5647422185869825880}
+  - component: {fileID: 967101549714722505}
   m_Layer: 5
   m_Name: Card
   m_TagString: Untagged
@@ -298,10 +299,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78f63c4583481b94b821c252871b3110, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectedColour: {r: 0, g: 1, b: 0, a: 1}
   flipped: 0
   Back: {fileID: 5934770777015285602}
   Front: {fileID: 5938397117007497354}
   card: {fileID: 5647422185869825880}
+  cardBackground: {fileID: 7065110121710417120}
+  cardSlot: {fileID: 0}
 --- !u!114 &5647422185869825880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -314,13 +318,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c0025ea06ea62343845425fb480b88a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnThisCardDealt:
+  ammo: -1
+  attacking: 0
+  OnAttack:
     m_PersistentCalls:
       m_Calls: []
-  cast: 0
+  OnDealt:
+    m_PersistentCalls:
+      m_Calls: []
+  OnReshuffled:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDiscarded:
+    m_PersistentCalls:
+      m_Calls: []
+  OnCardSelected:
+    m_PersistentCalls:
+      m_Calls: []
   data: {fileID: 11400000, guid: 005a4c81e440354449e95ab1298027a5, type: 2}
-  cardManager: {fileID: 0}
-  cardSlot: {fileID: 0}
+  effects: []
+  arcana: {fileID: 0}
+--- !u!61 &967101549714722505
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5875935491036138029}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 113.45, y: 170.36}
+  m_EdgeRadius: 0
 --- !u!1 &5934770777015285602
 GameObject:
   m_ObjectHideFlags: 0
