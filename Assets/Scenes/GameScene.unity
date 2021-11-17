@@ -3189,6 +3189,7 @@ MonoBehaviour:
   discardPile: {fileID: 1188446888}
   arcana: {fileID: 1267153410}
   weaponManager: {fileID: 1213394936}
+  drawerArrow: {fileID: 1408337324}
 --- !u!114 &2096579515
 MonoBehaviour:
   m_ObjectHideFlags: 0

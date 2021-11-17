@@ -19,6 +19,11 @@ public class Card : Weapon, IPointerClickHandler
     bool _castable = true;
     bool _markedForDiscard = false;
 
+    private void Update()
+    {
+        _castable = arcana.HasEnoughArcana(data.cost);
+    }
+
     public override void Attack()
     {
         base.Attack();
@@ -26,7 +31,6 @@ public class Card : Weapon, IPointerClickHandler
             return;
         Cast();
         //do the thing
-        _castable = false;
         _markedForDiscard = true;
         cardManager.DeselectCard();
     }
@@ -52,6 +56,8 @@ public class Card : Weapon, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (!_castable)
+            return;
         cardManager.SelectCard(this);
     }
 }

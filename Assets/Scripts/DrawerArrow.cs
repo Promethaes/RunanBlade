@@ -30,9 +30,10 @@ public class DrawerArrow : MonoBehaviour
     //maybe revise this code
     private void Update()
     {
-        weaponManager.canAttack = !(_opening = _mousePos.y <= _yCoord);
+        bool shouldOpen = _mousePos.y <= _yCoord || _opening;
+        weaponManager.canAttack = !shouldOpen;
 
-        if (_opening)
+        if (shouldOpen)
             _x += Time.deltaTime * lerpSpeed;
         else
             _x -= Time.deltaTime * lerpSpeed;
@@ -51,5 +52,23 @@ public class DrawerArrow : MonoBehaviour
     public bool IsDrawerOpen()
     {
         return _opening;
+    }
+
+    ///b: true for open, false for closed, -1 duration for forever
+    public void SetDrawerOpen(bool b, float duration)
+    {
+        IEnumerator ChangeDrawerState()
+        {
+            _opening = b;
+            float x = 0.0f;
+            while (x < duration || duration == -1)
+            {
+                yield return new WaitForEndOfFrame();
+                x += Time.deltaTime;
+
+            }
+            _opening = !b;
+        }
+        StartCoroutine(ChangeDrawerState());
     }
 }

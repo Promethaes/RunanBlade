@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
 
 
     Vector2 _moveVec = new Vector2();
+    bool _canMove = true;
     [HideInInspector] public bool doMovementFalloff = true;
     float _momentumTValue = 0.0f;
     bool _canJump = false;
@@ -63,6 +64,9 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!_canMove)
+            _moveVec = Vector2.zero;
+
         if (allowXAxisInputWhileJumping)
             rigidbody.AddForce(transform.right * _moveVec.x * movementSpeed, ForceMode2D.Impulse);
         else
@@ -95,9 +99,9 @@ public class PlayerController : MonoBehaviour
 
     public void OnJump(CallbackContext ctx)
     {
-        if (!_canJump || !ctx.performed)
+        if (!_canJump || !ctx.performed || !_canMove)
             return;
-        rigidbody.AddForce(Vector2.up * jumpScalar,ForceMode2D.Impulse);
+        rigidbody.AddForce(Vector2.up * jumpScalar, ForceMode2D.Impulse);
     }
 
     public void OnLook(CallbackContext ctx)
@@ -109,9 +113,12 @@ public class PlayerController : MonoBehaviour
 
     public void OnFire(CallbackContext ctx)
     {
-        if (!ctx.performed) return;
+        _canMove = !ctx.performed;
+        if (!ctx.performed)
+            return;
         //this is here because webGL sucks basically
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
+
 }

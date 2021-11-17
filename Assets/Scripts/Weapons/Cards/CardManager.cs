@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using static UnityEngine.InputSystem.InputAction;
 
 public class CardManager : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class CardManager : MonoBehaviour
 
     [Tooltip("How fast cards move to their slots.")]
     [SerializeField] float dealSpeed = 1.0f;
+    [Tooltip("How long the card drawer will be open when it does open.")]
+    [SerializeField] float openLength = 1.0f;
     public UnityEvent OnDeal;
     public UnityEvent OnCardDealt;
 
@@ -28,12 +31,15 @@ public class CardManager : MonoBehaviour
     [SerializeField] Transform discardPile = null;
     [SerializeField] Arcana arcana = null;
     [SerializeField] WeaponManager weaponManager = null;
+    [SerializeField] DrawerArrow drawerArrow = null;
     List<Card> _deck = new List<Card>();
     List<Card> _hand = new List<Card>();
     List<Card> _discard = new List<Card>();
 
     //false for free, true for occupied
     Dictionary<Transform, bool> _internalCardSlots = new Dictionary<Transform, bool>();
+
+    bool _drawingCards = false;
 
     // Start is called before the first frame update
     void Start()
@@ -75,6 +81,7 @@ public class CardManager : MonoBehaviour
 
     void Deal()
     {
+        drawerArrow.SetDrawerOpen(true, openLength);
         for (int i = cardSlots.Count - 1; i >= 0; i--)
         {
             if (_internalCardSlots[cardSlots[i]])
@@ -86,7 +93,6 @@ public class CardManager : MonoBehaviour
             weaponManager.AddWeapon(card);
             _internalCardSlots[cardSlots[i]] = true;
             OnDeal.Invoke();
-            card.OnDealt.Invoke();
 
             IEnumerator Lerp()
             {
@@ -97,6 +103,7 @@ public class CardManager : MonoBehaviour
                     x += Time.deltaTime * dealSpeed;
                     card.transform.position = Vector3.Lerp(transform.position, cardSlots[i].transform.position, lerpCurve.Evaluate(x));
                 }
+                card.OnDealt.Invoke();
                 OnCardDealt.Invoke();
                 card.GetComponent<CardVisuals>().cardSlot = cardSlots[i];
                 card.transform.SetParent(cardSlots[i]);
@@ -108,9 +115,13 @@ public class CardManager : MonoBehaviour
 
     void Discard(Card card)
     {
+        drawerArrow.SetDrawerOpen(true, openLength);
         _hand.Remove(card);
         _discard.Add(card);
+        _internalCardSlots[card.GetComponent<CardVisuals>().cardSlot] = false;
         weaponManager.RemoveWeapon(card);
+        card.OnDiscarded.Invoke();
+        //move this to card visuals?
         IEnumerator Lerp()
         {
             var cardSlot = card.GetComponent<CardVisuals>().cardSlot;
@@ -129,11 +140,27 @@ public class CardManager : MonoBehaviour
 
     public void SelectCard(Card c)
     {
-        weaponManager.ChangeWeapon(c);
+        if (_hand.Contains(c))
+            weaponManager.ChangeWeapon(c);
     }
     public void DeselectCard()
     {
         weaponManager.ChangeWeapon(null);
+    }
+
+    public void OnDrawCards(CallbackContext ctx)
+    {
+        _drawingCards = ctx.performed && _hand.Count < 5;
+        IEnumerator Draw()
+        {
+            while (_drawingCards)
+            {
+                yield return new WaitForSeconds(0.25f);
+                Deal();
+            }
+        }
+        if (ctx.performed)
+            StartCoroutine(Draw());
     }
 
 }

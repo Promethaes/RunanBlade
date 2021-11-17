@@ -23,7 +23,7 @@ public class Arcana : MonoBehaviour
 
     public bool UseArcana(float cost)
     {
-        if(arcana - cost < 0.0f)
+        if(!HasEnoughArcana(cost))
             return false;
         arcana -= cost;
         OnUseArcana.Invoke();
@@ -33,6 +33,10 @@ public class Arcana : MonoBehaviour
             OnArcanaEmpty.Invoke();
         }
         return true;
+    }
+
+    public bool HasEnoughArcana(float cost){
+        return arcana - cost > 0.0f;
     }
 
 }

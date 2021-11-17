@@ -16,6 +16,7 @@ public class CardVisuals : MonoBehaviour
 
 
     [HideInInspector] public Transform cardSlot = null;
+    [HideInInspector] public Transform discardPile = null;
 
     Color _originalColour = Color.black;
     // Start is called before the first frame update
@@ -43,6 +44,9 @@ public class CardVisuals : MonoBehaviour
         {
             cardBackground.color = _originalColour;
         }
+        void OnDiscard(){
+            
+        }
 
         _originalColour = cardBackground.color;
 
@@ -50,6 +54,7 @@ public class CardVisuals : MonoBehaviour
         card.OnReshuffled.AddListener(OnReshuffle);
         card.OnSelected.AddListener(OnSelect);
         card.OnDeselected.AddListener(OnDeselect);
+        card.OnDiscarded.AddListener(OnDiscard);
     }
 
 }
