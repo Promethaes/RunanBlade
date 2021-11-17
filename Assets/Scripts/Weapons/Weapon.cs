@@ -5,6 +5,9 @@ using UnityEngine.Events;
 
 public class Weapon : MonoBehaviour
 {
+    [Header("References")]
+    public GameObject weaponOwner = null;
+
     [Tooltip("-1 for infinite")]
     [SerializeField] protected int ammo = -1;
     [HideInInspector] public bool attacking = false;

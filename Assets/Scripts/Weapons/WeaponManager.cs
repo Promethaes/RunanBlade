@@ -14,6 +14,7 @@ public class WeaponManager : MonoBehaviour
 
     [Header("References")]
     [SerializeField] List<Weapon> weapons = new List<Weapon>();
+    [SerializeField] GameObject ownerEntity = null;
 
     [HideInInspector] public bool canAttack = true;
 
@@ -21,14 +22,11 @@ public class WeaponManager : MonoBehaviour
 
     float _internalDowntime = 0.0f;
 
-    private void Start()
+    private void Awake()
     {
         _currentWeapon = weapons[0];
         foreach (var w in weapons)
-        {
-            if (_currentWeapon == w)
-                continue;
-        }
+            w.weaponOwner = ownerEntity;
     }
 
     private void Update()
@@ -69,6 +67,7 @@ public class WeaponManager : MonoBehaviour
     public void AddWeapon(Weapon weapon)
     {
         weapons.Add(weapon);
+        weapon.weaponOwner = ownerEntity;
     }
     public void RemoveWeapon(Weapon weapon)
     {

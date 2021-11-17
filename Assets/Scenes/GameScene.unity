@@ -1056,6 +1056,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5f2c38dfa6a40746beb4635b796f163, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponOwner: {fileID: 0}
   ammo: -1
   attacking: 0
   OnAttack:
@@ -1117,6 +1118,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1012485791}
   - component: {fileID: 1012485792}
+  - component: {fileID: 1012485793}
   m_Layer: 5
   m_Name: Health
   m_TagString: Untagged
@@ -1195,6 +1197,20 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1012485793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1012485790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73e8795a19ef1c04e8c88ed09f8fc232, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slider: {fileID: 1012485792}
+  health: {fileID: 1267153412}
 --- !u!1 &1048477417
 GameObject:
   m_ObjectHideFlags: 0
@@ -1661,6 +1677,7 @@ MonoBehaviour:
       m_Calls: []
   weapons:
   - {fileID: 860272627}
+  ownerEntity: {fileID: 1267153403}
   canAttack: 1
 --- !u!1 &1230988863
 GameObject:
@@ -1712,8 +1729,10 @@ GameObject:
   - component: {fileID: 1267153406}
   - component: {fileID: 1267153405}
   - component: {fileID: 1267153410}
+  - component: {fileID: 1267153412}
   - component: {fileID: 1267153409}
   - component: {fileID: 1267153404}
+  - component: {fileID: 1267153411}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1827,6 +1846,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1267153411}
+        m_MethodName: MousePosition
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: b47d2f9e-40e2-4220-930f-5db81b07e962
     m_ActionName: Game/Look[/Mouse/delta]
   - m_PersistentCalls:
@@ -1844,6 +1874,21 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: bbdc944b-9dae-4a9f-a2ef-dd2b3b1ac363
     m_ActionName: Game/Fire[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2096579514}
+        m_MethodName: OnDrawCards
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 942d77f2-ac98-4dad-9013-13d3c91bbfaf
+    m_ActionName: Game/DrawCards[/Keyboard/ctrl]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Game
@@ -1936,6 +1981,7 @@ Transform:
   m_Children:
   - {fileID: 1071796243}
   - {fileID: 1213394935}
+  - {fileID: 1406540057}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1977,6 +2023,39 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnArcanaEmpty:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1267153411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1267153403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cd0356d844b1044cb2de682010b42c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startPos: {fileID: 1406540057}
+  camera: {fileID: 1756465100}
+--- !u!114 &1267153412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1267153403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e86af9731974dd94b9ad86d34c591728, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 10
+  OnTakeDamage:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDie:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &1333999742
@@ -2312,6 +2391,87 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1354630976}
   m_CullTransparentMesh: 0
+--- !u!1 &1406540056
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1406540057}
+  - component: {fileID: 1406540058}
+  m_Layer: 0
+  m_Name: SpellStartPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1406540057
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1406540056}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.56, y: 0, z: 0}
+  m_LocalScale: {x: 0.5125, y: 0.27421877, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1267153408}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &1406540058
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1406540056}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: 4caaab8f9cf0cab468103dcace881743, type: 3}
+  m_Color: {r: 0.30054832, g: 1, b: 0, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 5, y: 5}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!1 &1408337322
 GameObject:
   m_ObjectHideFlags: 0
@@ -2869,6 +3029,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1850023245}
   - component: {fileID: 1850023246}
+  - component: {fileID: 1850023247}
   m_Layer: 5
   m_Name: Arcana
   m_TagString: Untagged
@@ -2947,6 +3108,20 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1850023247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1850023244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7edf20d3804cb9149a69de741d7b7557, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slider: {fileID: 1850023246}
+  arcana: {fileID: 1267153410}
 --- !u!1 &1905827080
 GameObject:
   m_ObjectHideFlags: 0
@@ -3146,8 +3321,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deckHelpers:
-  - card: {fileID: 5647422185869825880, guid: 3c6d1fbd23c98ca45961a2e1b1341567, type: 3}
-    numCopies: 30
+  - card: {fileID: 5647422185869825880, guid: 1eac435714dc9de4cb45a6d58af38b98, type: 3}
+    numCopies: 5
   lerpCurve:
     serializedVersion: 2
     m_Curve:
@@ -3174,6 +3349,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   dealTime: 0.2
   dealSpeed: 1
+  openLength: 1
   OnDeal:
     m_PersistentCalls:
       m_Calls: []

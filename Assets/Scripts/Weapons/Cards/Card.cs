@@ -21,6 +21,8 @@ public class Card : Weapon, IPointerClickHandler
 
     private void Update()
     {
+        foreach (var e in effects)
+            e.ownerEntity = weaponOwner;
         _castable = arcana.HasEnoughArcana(data.cost);
     }
 
@@ -40,10 +42,13 @@ public class Card : Weapon, IPointerClickHandler
         {
             foreach (var e in effects)
             {
-                e.Cast();
+                while (e.charges > 0)
+                    e.Cast();
                 while (!e.finishedCasting)
                     yield return null;
             }
+            foreach (var e in effects)
+                e.ResetEffect();
             yield return null;
         }
         StartCoroutine(AttemptCast());
